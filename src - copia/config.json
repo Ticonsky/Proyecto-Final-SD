@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "database": "staycation",
+    "user": "root",
+    "password": "",
+    "port": "3306"
+}
