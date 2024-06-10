@@ -1,13 +1,15 @@
-/==============================================================/
-/* DBMS name: DBeaver 24.0.4                                  */
-/==============================================================/
+/*==============================================================*/
+/* DBMS name: DBeaver 24.0.4                                    */
+/*==============================================================*/
 
 drop database if exists staycation;
 
 create database staycation;
 
+use staycation;
+
 -- User table creation
-create table staycation.User(
+create table User (
     userId varchar(36) primary key default (replace(uuid(), '-', '')),
     userRole varchar(1) not null,
     name varchar(50) not null,
@@ -16,27 +18,15 @@ create table staycation.User(
     phone varchar(20) unique not null
 );
 
--- Card table creation
-create table staycation.Card (
-    cardId varchar(36) primary key default (replace(uuid(), '-', '')),
-    userId varchar(36) not null,
-    cardNumber varchar(28) not null,
-    cardOwner varchar(50) not null,
-    dueDate varchar(5) not null,
-    cvv varchar(5) not null, -- i.e: 07/28 
-    balance int check(balance > 0),
-    foreign key(userId) references User(userId)
-);
-
 -- Property Type table creation
-create table staycation.PropertyType (
+create table PropertyType (
     propertyTypeId int primary key auto_increment,
     name varchar(50) unique not null,
     description varchar(200) not null
 );
 
 -- Property Addons table creation
-create table staycation.PropertyAddon (
+create table PropertyAddon (
     propertyAddonId int primary key auto_increment,
     wifi boolean default false,
     kitchen boolean default false,
@@ -49,7 +39,7 @@ create table staycation.PropertyAddon (
 );
 
 -- Property table creation
-create table staycation.Property (
+create table Property (
     propertyId varchar(36) primary key default (replace(uuid(), '-', '')),
     userId varchar(36) not null,
     propertyTypeId int not null,
@@ -68,37 +58,48 @@ create table staycation.Property (
     foreign key (propertyAddonId) references PropertyAddon(propertyAddonId)
 );
 
+-- Card table creation
+create table Card (
+    cardId varchar(36) primary key default (replace(uuid(), '-', '')),
+    userId varchar(36) not null,
+    cardNumber varchar(28) not null,
+    cardOwner varchar(50) not null,
+    dueDate varchar(5) not null,
+    cvv varchar(5) not null, -- i.e: 07/28 
+    balance int check(balance > 0),
+    foreign key(userId) references User(userId)
+);
+
 -- Booking table creation
 create table Booking (
     bookingId varchar(36) primary key default (replace(uuid(), '-', '')),
     propertyId varchar(36) not null,
-    user_id varchar(36) not null,
+    userId varchar(36) not null,
     startingDate timestamp default current_timestamp,
-    endingDate timestamp default ,
     foreign key (propertyId) references Property(propertyId),
     foreign key (userId) references User(userId)
 );
 
 -- Creación de tabla para Comentarios
-CREATE TABLE Comment (
-    comment_id INT PRIMARY KEY,
-    booking_id UUID NOT NULL,
-    user_id UUID NOT NULL,
-    content VARCHAR(500) NOT NULL,
-    upload_date INT NOT NULL,
-    rating INT CHECK (rating >= 0 AND rating <= 5),
-    FOREIGN KEY (booking_id) REFERENCES Bookings(booking_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+create table Comment (
+    commentId int primary key auto_increment,
+    bookingId varchar(36) not null,
+    userId varchar(36) not null,
+    content varchar(500) not null,
+    uploadDate timestamp default current_timestamp,
+    rating int check (rating >= 0 AND rating <= 5),
+    foreign key (bookingId) references Booking(bookingId),
+    foreign key (userId) references User(userId)
 );
 
 -- Creación de tabla para Facturas
-CREATE TABLE Bill (
-    bill_id INT PRIMARY KEY,
-    booking_id UUID NOT NULL,
-    property_id UUID NOT NULL,
-    user_id UUID NOT NULL,
-    bill_status VARCHAR(15) UNIQUE NOT NULL,
-    FOREIGN KEY (booking_id) REFERENCES Bookings(booking_id),
-    FOREIGN KEY (property_id) REFERENCES Properties(property_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+create table Bill (
+    billId int primary key auto_increment,
+    bookingId varchar(36) not null,
+    propertyId varchar(36) not null,
+    userId varchar(36) not null,
+    billStatus varchar(15) unique not null,
+    foreign key (bookingId) references Booking(bookingId),
+    foreign key (propertyId) references Property(propertyId),
+    foreign key (userId) references User(userId)
 );
