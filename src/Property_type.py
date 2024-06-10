@@ -91,4 +91,3 @@ class propertyType:
 
     def getPropertyDescription(self):
         return self.description
-propertyType.addPropertyType()  # Agrega un tipo de propiedad

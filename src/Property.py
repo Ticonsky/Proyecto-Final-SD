@@ -186,6 +186,4 @@ class Property:
             print(f"Error: {e}")
 #api para obtener la ubicacion de la propiedad y generar la url de openstreetmap para mostrar la ubicacion de la propiedad en un mapa en la pagina web de la aplicacion de alquiler de propiedades
 
-Property.addProperty()
-
 

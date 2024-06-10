@@ -9,13 +9,11 @@ from DBconnection import databaseConnection
 from datetime import datetime
 import uuid
 
-
 def Login():
     User.logIn()
 
 def signUp():
     User.signUp()
-
 
 def LoginOrSignUp():
     print("1. Iniciar sesión")
@@ -28,10 +26,6 @@ def LoginOrSignUp():
         signUp()
     else:
         print("Opción inválida")  
-
-
-
-
 
 def adminMenu():
     print("1. Agregar propiedad")
