@@ -6,7 +6,6 @@ import os
 class databaseConnection:
     def __init__(self):
         try:
-            # Proporcionar la ruta completa al archivo config.json
             config_path = os.path.join(os.path.dirname(__file__), 'config.json')
             with open(config_path) as config_file:
                 self.config = json.load(config_file)
