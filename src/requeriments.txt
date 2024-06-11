@@ -1,1 +1,0 @@
-//Todas las librerias o dependencias de py que se usan en el proyecto

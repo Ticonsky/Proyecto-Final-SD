@@ -1,35 +1,34 @@
-from DBconnection import databaseConnection
+from Model.PropertyAddonVO import propertyAddon
+from Model.DBconnetion import databaseConnection
+import uuid
 
-class propertyAddon:
-    def __init__(self, wifi, kitchen, parking, staffService, pool, securityCameras, laundry, gym):
-        self.wifi = wifi
-        self.kitchen = kitchen
-        self.parking = parking
-        self.staffService = staffService
-        self.pool = pool
-        self.securityCameras = securityCameras
-        self.laundry = laundry
-        self.gym = gym
+class PropertyAddonDAO:
+    def __init__(self):
+        pass
+    propertyAddonVO = propertyAddon()
 
-    @staticmethod
-    def selectPropertyAddonId():
-        print("Por favor, responda las siguientes preguntas para seleccionar los complementos correspondientes.")
-        wifi = input("¿Tiene wifi? (S/N): ")
-        kitchen = input("¿Tiene cocina? (S/N): ")
-        parking = input("¿Tiene estacionamiento? (S/N): ")
-        staffService = input("¿Tiene servicio de personal? (S/N): ")
-        pool = input("¿Tiene piscina? (S/N): ")
-        securityCameras = input("¿Tiene cámaras de seguridad? (S/N): ")
-        laundry = input("¿Tiene lavandería? (S/N): ")
-        gym = input("¿Tiene gimnasio? (S/N): ")
-        wifi = True if wifi.upper() == "S" else False
-        kitchen = True if kitchen.upper() == "S" else False
-        parking = True if parking.upper() == "S" else False
-        staffService = True if staffService.upper() == "S" else False
-        pool = True if pool.upper() == "S" else False
-        securityCameras = True if securityCameras.upper() == "S" else False
-        laundry = True if laundry.upper() == "S" else False
-        gym = True if gym.upper() == "S" else False
+    def select_propertyAddon(self, propertyAddonId):
+        try:
+            db = databaseConnection()
+            conn = db.getConnection()
+            if not conn:
+                raise Exception("No se pudo establecer la conexión a la base de datos")
+
+            cur = db.getCursor(conn)
+            cur.execute("""
+                SELECT * FROM propertyAddons WHERE propertyAddonId = %s
+                """, (propertyAddonId,))
+
+            propertyAddon = cur.fetchone()
+            return propertyAddon
+        except Exception as e:
+            print(f"Error al seleccionar el tipo de propiedad: {e}")
+        finally:
+            if conn.is_connected():
+                cur.close()
+                conn.close()
+
+    def get_propertyAddons(self):
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -40,7 +39,7 @@ class propertyAddon:
                 SELECT propertyAddonId 
                 FROM propertyaddon
                 WHERE wifi = %s AND kitchen = %s AND parking = %s AND staffService = %s AND pool = %s AND securityCameras = %s AND laundry = %s AND gym = %s
-                """, (wifi, kitchen, parking, staffService, pool, securityCameras, laundry, gym))
+                """, (propertyAddon.wifi, propertyAddon.kitchen, propertyAddon.parking, propertyAddon.staffService, propertyAddon.pool, propertyAddon.securityCameras, propertyAddon.laundry, propertyAddon.gym))
             result = cur.fetchone()
             if result:
                 return result[0]
@@ -55,7 +54,7 @@ class propertyAddon:
             if 'conn' in locals():
                 conn.close()
 
-    @staticmethod
+
     def setAllCombinations():
         try:
             db = databaseConnection()
@@ -85,4 +84,4 @@ class propertyAddon:
             if 'cursor' in locals():
                 cursor.close()
             if 'conn' in locals():
-                conn.close()
+                conn.close() 
