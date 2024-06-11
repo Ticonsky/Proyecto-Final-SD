@@ -6,7 +6,7 @@ import uuid
 class PropertyTypeDAO:
     def __init__(self):
         pass
-    propertyTypeVO = propertyType()
+    propertyType = propertyType("","")
 
     def create_propertyType(self, propertyType):
         name = propertyType.name
@@ -21,7 +21,7 @@ class PropertyTypeDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                INSERT INTO propertyTypes (propertyTypeId, name, description)
+                INSERT INTO propertyType (propertyTypeId, name, description)
                 VALUES (%s, %s, %s)
                 """, (propertyTypeId, name, description))
 
@@ -33,7 +33,8 @@ class PropertyTypeDAO:
                 cur.close()
                 conn.close()
 
-    def delete_propertyType(self, propertyTypeId):
+    def delete_propertyType(self, propertyType):
+        name=propertyType.name
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -42,8 +43,8 @@ class PropertyTypeDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                DELETE FROM propertyTypes WHERE propertyTypeId = %s
-                """, (propertyTypeId,))
+                DELETE FROM propertyType WHERE name = %s
+                """, (name,))
 
             conn.commit()
         except Exception as e:
@@ -66,7 +67,7 @@ class PropertyTypeDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                UPDATE propertyTypes SET name = %s, description = %s WHERE propertyTypeId = %s
+                UPDATE propertyType SET name = %s, description = %s WHERE propertyTypeId = %s
                 """, (name, description, propertyTypeId))
 
             conn.commit()

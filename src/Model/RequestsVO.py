@@ -1,5 +1,5 @@
 import requests
-from Property import Property
+from Model.PropertyVO import property
 
 def get_coordinates(address):
     url = f"https://nominatim.openstreetmap.org/search?format=json&q={address}"

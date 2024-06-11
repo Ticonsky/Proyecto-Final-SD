@@ -2,31 +2,38 @@ from Model.CardVO import card
 from Model.DBconnetion import databaseConnection
 import uuid
 from Model.UserVO import user
+from Controller.UserDAO import UserDAO
 
 class CardDAO:
-    CardVO = card()
+    CardVO = card("","","","","","")
+
+
     def __init__(self):
         pass
 
     def create_card(self, card):
-        # Código para crear una nueva tarjeta en la base de datos
-        userId = card.userId
+        userVO = user()
+        userdao=UserDAO()
+        userId = userdao.get_userId(userVO) 
+
         cardNumber = card.cardNumber
         cardOwner = card.cardOwner
         dueDate = card.dueDate
         cvv = card.cvv
         balance = card.balance
         cardId = str(uuid.uuid4())
+        print(cardOwner)
+
 
         try:
             db = databaseConnection()
             conn = db.getConnection()
             if not conn:
                 raise Exception("No se pudo establecer la conexión a la base de datos")
-
             cur = db.getCursor(conn)
+            print(userId)
             cur.execute("""
-                INSERT INTO cards (cardId, userId, cardNumber, cardOwner, dueDate, cvv, balance)
+                INSERT INTO card (cardId, userId, cardNumber, cardOwner, dueDate, cvv, balance)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (cardId, userId, cardNumber, cardOwner, dueDate, cvv, balance))
 

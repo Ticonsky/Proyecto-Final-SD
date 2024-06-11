@@ -1,7 +1,9 @@
+from Model.PropertyVO import property
+from Model.UserVO import user
+from Model.BookingVO import Booking
 
-from src.Model.BookingVO import booking
-from src.Model.PropertyVO import property
-from src.Model.UserVO import user
+
+
 
 class bill:
     def __init__(self, bookingId, propertyId,propertyPrice, userId, billStatus):

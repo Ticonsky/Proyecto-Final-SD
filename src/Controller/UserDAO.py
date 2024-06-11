@@ -1,20 +1,28 @@
 from Model.UserVO import user
 from Model.DBconnetion import databaseConnection 
 import uuid
-
+import hashlib
 
 class UserDAO:
-    UserVO = user()
+    UserVO = user("","","","","")
     def __init__(self):
         pass
 
-    def create_user(self, user):
-        # Código para crear un nuevo usuario en la base de datos
-        name = user.username
-        email = user.email
-        password = user.password
-        user_id = str(uuid.uuid4())
+    def hashpassword(password):
+        return hashlib.sha256(password.encode()).hexdigest()
 
+    def create_user(self, user:user):
+        # Código para crear un nuevo usuario en la base de datos
+        userRole=user.userRole
+        name = user.name
+        email = user.email
+        password = user.hashedPassword
+        password=UserDAO.hashpassword(password)
+        phone = user.phone
+        user_id = str(uuid.uuid4())
+        
+
+        print(userRole, user_id,name, email, password, phone)
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -23,9 +31,9 @@ class UserDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                INSERT INTO users (user_id, username, email, password)
-                VALUES (%s, %s, %s, %s)
-                """, (user_id, name, email, password))
+                INSERT INTO user (userRole,userId, name, email, hashedPassword, phone)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """, (userRole,user_id, name, email, password, phone))
 
             conn.commit()
         except Exception as e:
@@ -35,7 +43,8 @@ class UserDAO:
                 cur.close()
                 conn.close()
 
-    def delete_user(self, user_id):
+    def delete_user(self, user):
+        name=user.name
         # Código para eliminar un usuario de la base de datos
         try:
             db = databaseConnection()
@@ -45,8 +54,8 @@ class UserDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                DELETE FROM users WHERE user_id = %s
-                """, (user_id,))
+                DELETE FROM user WHERE name = %s
+                """, (name))
 
             conn.commit()
         except Exception as e:
@@ -56,13 +65,10 @@ class UserDAO:
                 cur.close()
                 conn.close()
 
-    def update_user(self, user):
+    def upgradeUser(self, user):
         # Código para actualizar un usuario en la base de datos
-        user_id = user.user_id
-        name = user.username
-        email = user.email
-        password = user.password
-
+        name=user.name
+        userRole=1
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -71,9 +77,9 @@ class UserDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                UPDATE users SET username = %s, email = %s, password = %s
-                WHERE user_id = %s
-                """, (name, email, password, user_id))
+                UPDATE user SET userRole = %s
+                WHERE name = %s
+                """, (name))
 
             conn.commit()
         except Exception as e:
@@ -83,7 +89,8 @@ class UserDAO:
                 cur.close()
                 conn.close()
 
-    def get_user(self, user_id):
+    def get_userID(self, user):
+        name= user.name
         # Código para obtener un usuario de la base de datos
         try:
             db = databaseConnection()
@@ -93,8 +100,8 @@ class UserDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                SELECT * FROM users WHERE user_id = %s
-                """, (user_id,))
+                SELECT userId FROM user WHERE name = %s
+                """, (name,))
 
             user = cur.fetchone()
             return user
@@ -104,4 +111,3 @@ class UserDAO:
             if conn.is_connected():
                 cur.close()
                 conn.close()
-    
