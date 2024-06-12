@@ -90,7 +90,7 @@ class UserDAO:
                 conn.close()
 
     def get_userID(self, user):
-        email= user.email
+        email = user.email
         # Código para obtener un usuario de la base de datos
         try:
             db = databaseConnection()
@@ -103,13 +103,24 @@ class UserDAO:
                 SELECT userId FROM user WHERE email = %s
                 """, (email,))
 
-            user = cur.fetchone()
-            return user
+            result = cur.fetchone()
+            if result:
+                return result[0]  # Devuelve solo el ID de usuario
+            else:
+                print("Usuario no encontrado.")
+                return None
         except Exception as e:
             print(f"Error al obtener el usuario: {e}")
+            return None
         finally:
-            if conn.is_connected():
+            if 'cur' in locals() and cur:
+                try:
+                    if cur._have_unread_result():
+                        cur.fetchall()  # Leer todos los resultados no leídos
+                except:
+                    pass
                 cur.close()
+            if 'conn' in locals() and conn.is_connected():
                 conn.close()
 
     def LogIn(self, user):
@@ -162,5 +173,21 @@ class UserDAO:
                 cur.close()
                 conn.close()
         
-        
+    def check_user_exists(self, userId):
+        db = databaseConnection()
+        conn = db.getConnection()
+        if not conn:
+            raise Exception("No se pudo establecer la conexión a la base de datos")
+        try:
+            cur = db.getCursor(conn)
+            cur.execute("SELECT COUNT(*) FROM user WHERE userId = %s", (userId,))
+            result = cur.fetchone()
+            return result[0] > 0
+        except Exception as e:
+            print(f"Error al verificar la existencia del usuario: {e}")
+            return False
+        finally:
+            if conn.is_connected():
+                cur.close()
+                conn.close()
 

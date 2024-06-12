@@ -83,6 +83,7 @@ def signUpLogIn():
         signUpLogIn()
 
 def menuHost():
+    PropertyDAo = PropertyDAO()
     print("Menú de anfitrión")
     print("1. Administrar propiedades")
     print("2. Adiministrar Reservas")
@@ -91,6 +92,7 @@ def menuHost():
     print("5. Cerrar sesión")
     option = input("Seleccione una opción: ")
     
+    
     if option == "1":
         print("administración de propiedades")
         print("1. añadir propiedad")
@@ -98,8 +100,45 @@ def menuHost():
         print("3. eliminar propiedad")
         print("4. volver al menu principal")
         option = input("Seleccione una opción: ")
+
         if option == "1":
-                pass
+            property0=property("","","","","","","","","","","","")
+            user0=user("","","","","")
+            propertyType0=propertyType("","")
+            propertyAddon0=propertyAddon("","","","","","","","",)
+
+            print("ingrese sus credenciales")
+            user0.email=input("ingrese su correo electronico: ")
+            user0.hashedPassword=input("ingrese su contraseña: ")
+
+            
+            print("ingerese el tipo de propiedad")
+            propertyType0.name=input("ingrese el nombre del tipo de propiedad: ")
+            
+            print("ingrese el addon de la propiedad , S para agregar y N para no agregar")
+            propertyAddon0.wifi=input("ingrese si tiene wifi: ")
+            propertyAddon0.kitchen=input("ingrese si tiene cocina: ")
+            propertyAddon0.parking=input("ingrese si tiene parqueadero: ")
+            propertyAddon0.staffService=input("ingrese si tiene servicio de personal: ")
+            propertyAddon0.pool=input("ingrese si tiene piscina: ")
+            propertyAddon0.securityCameras=input("ingrese si tiene camaras de seguridad: ")
+            propertyAddon0.laundry=input("ingrese si tiene lavanderia: ")
+            propertyAddon0.gym=input("ingrese si tiene gimnasio: ")
+
+
+            print("ingrese los datos de la propiedad")
+            property0.location=input("ingrese la ubicación de la propiedad: ")
+            property0.guests=input("ingrese la cantidad de huespedes: ")
+            property0.rooms=input("ingrese la cantidad de habitaciones: ")
+            property0.beds=input("ingrese la cantidad de camas: ")
+            property0.bathrooms=input("ingrese la cantidad de baños: ")
+            property0.photos=input("ingrese la url de las fotos: ")
+            property0.name=input("ingrese el nombre de la propiedad: ")
+            property0.description=input("ingrese la descripción de la propiedad: ")
+            property0.price=input("ingrese el precio de la propiedad: ")
+            
+            PropertyDAo.create_property(property0, user0, propertyType0, propertyAddon0)  # Llamar al método create_property de la instancia
+
     if option == "2":
         print("administración de reservas")
         print("1. añadir reserva")
@@ -129,6 +168,7 @@ def menuHost():
         menuHost()
 
 def menuUser():
+
     print("Menú de usuario")
     print("1. Buscar propiedades")
     print("2. Reservar propiedad")
@@ -140,10 +180,11 @@ def menuUser():
     if option == "1":
         print("Buscar propiedades")
         print("1. Buscar por tipo de propiedad")
-        print("2. Buscar por servicios")
-        print("3. Buscar por precio")
         print("4. Volver al menú principal")
         option = input("Seleccione una opción: ")
+        if option=="1":
+            Propertydao = PropertyDAO()
+            Propertydao.getAllProperties()
     if option == "2":
         print("Reservar propiedad")
         print("1. Reservar propiedad")
@@ -167,4 +208,36 @@ def menuUser():
         menuUser()
 
 
-signUpLogIn()
+
+        
+cardDAO = CardDAO()
+commentDAO = CommentDao()
+propertyAddonDAO = PropertyAddonDAO()
+propertyTypeDAO = PropertyTypeDAO()
+userDAO = UserDAO()
+propertyDAo = PropertyDAO()
+bookingDAo = bookingDAO()
+billDAo = billDAO()
+    
+    # Crear instancias de las clases VO
+propertyAddonVO = propertyAddon("s","s","s","s","s","s","s","s",)
+propertyTypeVO = propertyType("1","casa")
+userVO = user("0","0","0","0","0")
+propertyVO = property("2","2","2","2","2","2","2","2","2","2","2","2")
+bookingVO = Booking("","","","")
+billVO = bill("","","","","")
+commentVO = Comment("","","","","")
+cardVO = card("","","","","","","")
+
+
+print(propertyDAo.getAllProperties())
+print(propertyTypeDAO.get_propertyType(propertyTypeVO)) 
+print(propertyAddonDAO.get_propertyAddons(propertyAddonVO))
+user_id = userDAO.get_userID(userVO)
+print(user_id)
+
+# Verificar si el user_id existe en la tabla de usuarios antes de crear la propiedad
+if user_id:
+    print(propertyDAo.create_property(propertyVO, userVO, propertyTypeVO, propertyAddonVO))
+else:
+    print("Error: Usuario no encontrado en la base de datos.")

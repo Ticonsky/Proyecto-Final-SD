@@ -15,23 +15,29 @@ class PropertyDAO:
         self.propertyTypeDAO = PropertyTypeDAO()
         self.propertyAddonDAO = PropertyAddonDAO()
 
-    def create_property(self, property, user: user, propertyType: propertyType, propertyAddon: propertyAddon):
+    def create_property(self, property, user: user, propertyType:propertyType, propertyAddon: propertyAddon):
         userId_result = self.userDAO.get_userID(user)
         if userId_result is None:
             print("Usuario no encontrado")
             return
-        
         userId = userId_result[0]  # Acceder al primer elemento de la tupla devuelta por fetchone()
+
+        # Verificar si el userId existe en la tabla de usuarios
+        user_exists = self.userDAO.check_user_exists(userId)
+        if not user_exists:
+            print(f"Error: El userId {userId} no existe en la tabla de usuarios.")
+            return
+
         propertyTypeId = self.propertyTypeDAO.get_propertyType(propertyType)
         if propertyTypeId is None:
             print("Tipo de propiedad no encontrado")
             return
-        
+
         propertyAddonId = self.propertyAddonDAO.get_propertyAddons(propertyAddon)
         if propertyAddonId is None:
             print("Addon de propiedad no encontrado")
             return
-        
+
         propertyId = str(uuid.uuid4())
         location = property.location
         guests = property.guests
@@ -95,5 +101,24 @@ class PropertyDAO:
                         pass
                     cur.close()
                     conn.close()
+    def getAllProperties(self):
+        try:
+            db = databaseConnection()
+            conn = db.getConnection()
+            if not conn:
+                raise Exception("No se pudo establecer la conexión a la base de datos")
 
+            cur = db.getCursor(conn)
+            cur.execute("""
+                SELECT * FROM property
+                """)
+
+            properties = cur.fetchall()
+            return properties
+        except Exception as e:
+            print(f"Error al seleccionar todas las propiedades: {e}")
+        finally:
+            if conn.is_connected():
+                cur.close()
+                conn.close()
     

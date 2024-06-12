@@ -16,7 +16,7 @@ class PropertyAddonDAO:
         securityCameras = propertyAddon.securityCameras
         laundry = propertyAddon.laundry
         gym = propertyAddon.gym
-        
+
         wifi = True if wifi.upper() == "S" else False
         kitchen = True if kitchen.upper() == "S" else False
         parking = True if parking.upper() == "S" else False
@@ -49,7 +49,7 @@ class PropertyAddonDAO:
             print(f"Error al seleccionar el ID del complemento de propiedad: {e}")
             return None
         finally:
-            if 'cur' in locals() and cur:
+            if 'cur' in locals():
                 try:
                     if cur._have_unread_result():
                         cur.fetchall()  # Leer todos los resultados no leídos
@@ -58,6 +58,10 @@ class PropertyAddonDAO:
                 cur.close()
             if 'conn' in locals() and conn.is_connected():
                 conn.close()
+
+
+
+
     def select_propertyAddon(self, propertyAddonId):
         
         try:
@@ -116,11 +120,7 @@ class PropertyAddonDAO:
         except Exception as e:
             print(f"Error al seleccionar el ID del complemento de propiedad: {e}")
             return None
-        finally:
-            if 'cur' in locals():
-                cur.close()
-            if 'conn' in locals():
-                conn.close()
+
 
 
     def setAllCombinations():
