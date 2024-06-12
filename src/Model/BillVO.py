@@ -1,18 +1,21 @@
+# Importación de las clases necesarias para la factura
 from Model.PropertyVO import property
 from Model.UserVO import user
 from Model.BookingVO import Booking
 
-
-
-
+# Clase que representa una factura
 class bill:
-    def __init__(self, bookingId, propertyId,propertyPrice, userId, billStatus):
-        self.billId = None
-        self.bookingId = bookingId
-        self.propertyId = propertyId
-        self.propertyPrice = propertyPrice
-        self.userId = userId
-        self.billStatus = billStatus
+    def __init__(self, bookingId, propertyId, propertyPrice, userId, billStatus):
+        # Constructor de la clase bill, inicializa los atributos de la factura
+        self.billId = None  # Identificador único de la factura, inicialmente None
+        self.bookingId = bookingId  # Identificador de la reserva asociada a la factura
+        self.propertyId = propertyId  # Identificador de la propiedad asociada a la factura
+        self.propertyPrice = propertyPrice  # Precio de la propiedad asociado a la factura
+        self.userId = userId  # Identificador del usuario asociado a la factura
+        self.billStatus = billStatus  # Estado de la factura (e.g., pagado, pendiente)
+    
+    # Métodos getter y setter para cada atributo de la clase bill
+    
     def get_billId(self):
         return self.billId
 

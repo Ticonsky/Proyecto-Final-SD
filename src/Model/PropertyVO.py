@@ -1,17 +1,21 @@
+# Clase que representa una propiedad
 class property:
     def __init__(self, userId, propertyType, propertyAddon, location, guests, rooms, beds, bathrooms, photos, name, description, price):
-        self.userId = userId
-        self.propertyType = propertyType
-        self.propertyAddon = propertyAddon
-        self.location = location
-        self.guests = guests
-        self.rooms = rooms
-        self.beds = beds
-        self.bathrooms = bathrooms
-        self.photos = photos
-        self.name = name
-        self.description = description
-        self.price = price
+        # Constructor de la clase property, inicializa los atributos de la propiedad
+        self.userId = userId  # Identificador del usuario propietario de la propiedad
+        self.propertyType = propertyType  # Tipo de la propiedad
+        self.propertyAddon = propertyAddon  # Servicios adicionales de la propiedad
+        self.location = location  # Ubicación de la propiedad
+        self.guests = guests  # Número de huéspedes que la propiedad puede acomodar
+        self.rooms = rooms  # Número de habitaciones de la propiedad
+        self.beds = beds  # Número de camas de la propiedad
+        self.bathrooms = bathrooms  # Número de baños de la propiedad
+        self.photos = photos  # Fotos de la propiedad
+        self.name = name  # Nombre de la propiedad
+        self.description = description  # Descripción de la propiedad
+        self.price = price  # Precio de la propiedad
+
+    # Métodos getter y setter para cada atributo de la clase property
 
     def get_userId(self):
         return self.userId

@@ -1,6 +1,5 @@
-
 # Stay Cation: Comprehensive Backend Platform for Vacation Property Management
-### made by _Ticonsky_ && _Nous_
+### Made by _Ticonsky_ && _Nous_
 
 ## Overview
 Stay Cation is a backend platform designed to streamline the management of vacation properties. The platform caters to property owners, managers, and guests, providing features such as user registration, property management, bookings, comments, and billing. It integrates with the Google Maps API to enhance the user experience by providing property location visualization.
@@ -13,13 +12,6 @@ Stay Cation is a backend platform designed to streamline the management of vacat
 - **Billing**: Generate and manage invoices for bookings.
 - **Secure Payment Processing**: Handle payment details securely.
 
-## Project Structure
-The repository is organized as follows:
-- **assets/**: Contains any assets used in the project (images, etc.).
-- **src/**: Contains the source code of the project.
-- **Poster SD.pdf**: Poster presentation of the project.
-- **README.md**: This file.
-- **Technical_report_SD.pdf**: Detailed technical report of the project.
 
 ## Database Schema
 The database schema includes the following entities:
@@ -95,7 +87,7 @@ Stay Cation provides a robust solution for vacation property management, leverag
 4. Configure the database connection in the appropriate configuration file.
 5. Run the application:
     ```bash
-    python src/main.py
+    python src/Ticon/Manager.py
     ```
 
 ## Contributing
@@ -120,4 +112,4 @@ For any inquiries, please contact:
 
 ---
 
-© 2024 Universidad Distrital Francisco José de Calda
+© 2024 Universidad Distrital Francisco José de Caldas

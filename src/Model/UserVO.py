@@ -1,15 +1,15 @@
-
+# Clase que representa un usuario
 class user:
     
-    def __init__():
-        pass
-
     def __init__(self, userRole, name, email, password, phone):
-        self.userRole = userRole
-        self.name = name
-        self.email = email
-        self.hashedPassword = password
-        self.phone = phone
+        # Constructor de la clase user, inicializa los atributos del usuario
+        self.userRole = userRole  # Rol del usuario (e.g., administrador, cliente)
+        self.name = name  # Nombre del usuario
+        self.email = email  # Correo electrónico del usuario
+        self.hashedPassword = password  # Contraseña del usuario (debe ser cifrada)
+        self.phone = phone  # Número de teléfono del usuario
+
+    # Métodos getter y setter para cada atributo de la clase user
 
     def getUserRole(self):
         return self.userRole
@@ -36,5 +36,5 @@ class user:
         self.phone = phone
 
     def hashPassword(self, password):
-        # Implement your password hashing logic here
+        # Implementa tu lógica de cifrado de contraseñas aquí
         pass

@@ -1,12 +1,15 @@
+# Importaciones necesarias de otros módulos del proyecto y bibliotecas estándar
 from Model.PropertyAddonVO import propertyAddon
 from Model.DBconnetion import databaseConnection
 
+# Clase que maneja las operaciones de acceso a datos para los complementos de propiedad
 class PropertyAddonDAO:
-    propertyAddonVO = propertyAddon("","","","","","","","",)
+    propertyAddonVO = propertyAddon("", "", "", "", "", "", "", "")
 
     def __init__(self):
         pass
     
+    # Método para obtener el ID del complemento de propiedad basado en sus características
     def get_propertyAddons(self, propertyAddon):
         wifi = propertyAddon.wifi
         kitchen = propertyAddon.kitchen
@@ -17,6 +20,7 @@ class PropertyAddonDAO:
         laundry = propertyAddon.laundry
         gym = propertyAddon.gym
 
+        # Convertir valores 'S' a True y otros valores a False
         wifi = True if wifi.upper() == "S" else False
         kitchen = True if kitchen.upper() == "S" else False
         parking = True if parking.upper() == "S" else False
@@ -59,11 +63,8 @@ class PropertyAddonDAO:
             if 'conn' in locals() and conn.is_connected():
                 conn.close()
 
-
-
-
+    # Método para seleccionar un complemento de propiedad por su ID
     def select_propertyAddon(self, propertyAddonId):
-        
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -78,52 +79,14 @@ class PropertyAddonDAO:
             propertyAddon = cur.fetchone()
             return propertyAddon
         except Exception as e:
-            print(f"Error al seleccionar el tipo de propiedad: {e}")
+            print(f"Error al seleccionar el complemento de propiedad: {e}")
         finally:
             if conn.is_connected():
                 cur.close()
                 conn.close()
 
-    def get_propertyAddons(self, propertyAddon):
-        wifi=propertyAddon.wifi
-        kitchen=propertyAddon.kitchen
-        parking=propertyAddon.parking
-        staffService=propertyAddon.staffService
-        pool=propertyAddon.pool
-        securityCameras=propertyAddon.securityCameras
-        laundry=propertyAddon.laundry
-        gym=propertyAddon.gym
-        wifi = True if wifi.upper() == "S" else False
-        kitchen = True if kitchen.upper() == "S" else False
-        parking = True if parking.upper() == "S" else False
-        staffService = True if staffService.upper() == "S" else False
-        pool = True if pool.upper() == "S" else False
-        securityCameras = True if securityCameras.upper() == "S" else False
-        laundry = True if laundry.upper() == "S" else False
-        gym = True if gym.upper() == "S" else False
-        try:
-            db = databaseConnection()
-            conn = db.getConnection()
-            if not conn:
-                raise Exception("No se pudo establecer la conexión a la base de datos.")
-            cur = db.getCursor(conn)
-            cur.execute("""
-                SELECT propertyAddonId 
-                FROM propertyaddon
-                WHERE wifi = %s AND kitchen = %s AND parking = %s AND staffService = %s AND pool = %s AND securityCameras = %s AND laundry = %s AND gym = %s
-                """, (wifi, kitchen, parking, staffService, pool, securityCameras, laundry, gym))
-            result = cur.fetchone()
-            if result:
-                return result[0]
-            else:
-                print("No se encontró ninguna propiedad con esas características.")
-        except Exception as e:
-            print(f"Error al seleccionar el ID del complemento de propiedad: {e}")
-            return None
-
-
-
-    def setAllCombinations():
+    # Método para insertar todas las combinaciones posibles de complementos de propiedad
+    def setAllCombinations(self):
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -152,4 +115,4 @@ class PropertyAddonDAO:
             if 'cursor' in locals():
                 cursor.close()
             if 'conn' in locals():
-                conn.close() 
+                conn.close()
