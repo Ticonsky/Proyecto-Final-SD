@@ -6,7 +6,7 @@ from Model.DBconnetion import databaseConnection
 from Model.CommentVO import Comment
 
 class CommentDao():
-    comment=Comment("","","","")
+    comment=Comment("","","","","")
     def __init__(self):
         self.bookingDAO = bookingDAO()
         self.userDAO = UserDAO()

@@ -90,7 +90,7 @@ class UserDAO:
                 conn.close()
 
     def get_userID(self, user):
-        name= user.name
+        email= user.email
         # Código para obtener un usuario de la base de datos
         try:
             db = databaseConnection()
@@ -100,8 +100,8 @@ class UserDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                SELECT userId FROM user WHERE name = %s
-                """, (name,))
+                SELECT userId FROM user WHERE email = %s
+                """, (email,))
 
             user = cur.fetchone()
             return user
@@ -111,3 +111,56 @@ class UserDAO:
             if conn.is_connected():
                 cur.close()
                 conn.close()
+
+    def LogIn(self, user):
+        email=user.email
+        password=user.hashedPassword
+        password=UserDAO.hashpassword(password)
+        # Código para loguear un usuario en la base de datos
+        try:
+            db = databaseConnection()
+            conn = db.getConnection()
+            if not conn:
+                raise Exception("No se pudo establecer la conexión a la base de datos")
+
+            cur = db.getCursor(conn)
+            cur.execute("""
+                SELECT * FROM user WHERE email = %s AND hashedPassword = %s
+                """, (email, password))
+
+            user = cur.fetchone()
+            return user
+        except Exception as e:
+            print(f"Error al loguear el usuario: {e}")
+        finally:
+            if conn.is_connected():
+                cur.close()
+                conn.close()
+
+    def getUserRol(self, user:user):
+        email=user.email
+        password=user.hashedPassword
+        password=UserDAO.hashpassword(password)
+                # Código para loguear un usuario en la base de datos
+        try:
+            db = databaseConnection()
+            conn = db.getConnection()
+            if not conn:
+                raise Exception("No se pudo establecer la conexión a la base de datos")
+
+            cur = db.getCursor(conn)
+            cur.execute("""
+                SELECT userRole FROM user WHERE email = %s AND hashedPassword = %s
+                """, (email, password))
+
+            user = cur.fetchone()
+            return user
+        except Exception as e:
+            print(f"Error al loguear el usuario: {e}")
+        finally:
+            if conn.is_connected():
+                cur.close()
+                conn.close()
+        
+        
+

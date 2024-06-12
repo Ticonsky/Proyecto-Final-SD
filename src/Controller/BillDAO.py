@@ -30,9 +30,7 @@ class billDAO:
         if bookingId is None:
             print("Reserva no encontrada")
             return
-        
-        billId = str(uuid.uuid4())
-        
+                
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -41,9 +39,9 @@ class billDAO:
             
             cur = db.getCursor(conn)
             cur.execute("""
-                INSERT INTO bill (billId, bookingId, propertyId, propertyPrice, userId, billStatus)
+                INSERT INTO bill (bookingId, propertyId, propertyPrice, userId, billStatus)
                 VALUES (%s, %s, %s, %s, %s, %s)
-                """, (billId, bookingId, propertyId, property.price, userId, billStatus))
+                """, ( bookingId, propertyId, property.price, userId, billStatus))
             
             conn.commit()
         except Exception as e:
