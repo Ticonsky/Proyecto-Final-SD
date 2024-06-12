@@ -3,11 +3,12 @@
 import uuid
 
 class Booking:
-    def __init__(self, propertyId, userId, startingDate):
+    def __init__(self, propertyId, userId, startingDate, endingDate):
         self.bookingId = str(uuid.uuid4())
         self.propertyId = propertyId
         self.userId = userId
         self.startingDate = startingDate
+        self.endingDate = endingDate
 
     # Setter for bookingId
     def setBookingId(self, bookingId):

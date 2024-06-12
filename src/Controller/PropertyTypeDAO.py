@@ -6,7 +6,7 @@ import uuid
 class PropertyTypeDAO:
     def __init__(self):
         pass
-    propertyTypeVO = propertyType()
+    propertyType = propertyType("","")
 
     def create_propertyType(self, propertyType):
         name = propertyType.name
@@ -21,7 +21,7 @@ class PropertyTypeDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                INSERT INTO propertyTypes (propertyTypeId, name, description)
+                INSERT INTO propertyType (propertyTypeId, name, description)
                 VALUES (%s, %s, %s)
                 """, (propertyTypeId, name, description))
 
@@ -33,7 +33,8 @@ class PropertyTypeDAO:
                 cur.close()
                 conn.close()
 
-    def delete_propertyType(self, propertyTypeId):
+    def delete_propertyType(self, propertyType):
+        name=propertyType.name
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -42,8 +43,8 @@ class PropertyTypeDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                DELETE FROM propertyTypes WHERE propertyTypeId = %s
-                """, (propertyTypeId,))
+                DELETE FROM propertyType WHERE name = %s
+                """, (name,))
 
             conn.commit()
         except Exception as e:
@@ -66,7 +67,7 @@ class PropertyTypeDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                UPDATE propertyTypes SET name = %s, description = %s WHERE propertyTypeId = %s
+                UPDATE propertyType SET name = %s, description = %s WHERE propertyTypeId = %s
                 """, (name, description, propertyTypeId))
 
             conn.commit()
@@ -77,7 +78,8 @@ class PropertyTypeDAO:
                 cur.close()
                 conn.close()
     
-    def get_propertyType(self, propertyTypeId):
+    def get_propertyType(self, propertyType):
+        name = propertyType.name
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -86,15 +88,23 @@ class PropertyTypeDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                SELECT  FROM propertyTypes WHERE propertyTypeId = %s
-                """, (propertyTypeId,))
-
-            propertyType = cur.fetchone()
-            return propertyType
+                SELECT propertyTypeId FROM propertyType WHERE name = %s
+                """, (name,))
+            propertyTypeId_result = cur.fetchone()
+            if propertyTypeId_result:
+                return propertyTypeId_result[0]  # Devolver solo el valor del ID
+            else:
+                print("Tipo de propiedad no encontrado")
+                return None
         except Exception as e:
             print(f"Error al obtener el tipo de propiedad: {e}")
+            return None
         finally:
             if conn.is_connected():
+                try:
+                    if cur._have_unread_result():
+                        cur.fetchall()  # Leer todos los resultados no leídos
+                except:
+                    pass
                 cur.close()
                 conn.close()
-    

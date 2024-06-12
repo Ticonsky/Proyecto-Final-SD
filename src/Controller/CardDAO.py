@@ -2,15 +2,23 @@ from Model.CardVO import card
 from Model.DBconnetion import databaseConnection
 import uuid
 from Model.UserVO import user
+from Controller.UserDAO import UserDAO
 
 class CardDAO:
-    CardVO = card()
+    CardVO = card("","","","","","")
+    
+    userDAO = UserDAO()
+    uservo = user("","","","","")
     def __init__(self):
         pass
 
-    def create_card(self, card):
-        # Código para crear una nueva tarjeta en la base de datos
-        userId = card.userId
+    def create_card(self, card, user: user):
+        userId_result = self.userDAO.get_userID(user)
+        if userId_result is None:
+            print("Usuario no encontrado")
+            return
+
+        userId = userId_result[0]  # Acceder al primer elemento de la tupla devuelta por fetchone()
         cardNumber = card.cardNumber
         cardOwner = card.cardOwner
         dueDate = card.dueDate
@@ -23,10 +31,9 @@ class CardDAO:
             conn = db.getConnection()
             if not conn:
                 raise Exception("No se pudo establecer la conexión a la base de datos")
-
             cur = db.getCursor(conn)
             cur.execute("""
-                INSERT INTO cards (cardId, userId, cardNumber, cardOwner, dueDate, cvv, balance)
+                INSERT INTO card (cardId, userId, cardNumber, cardOwner, dueDate, cvv, balance)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (cardId, userId, cardNumber, cardOwner, dueDate, cvv, balance))
 
@@ -89,8 +96,14 @@ class CardDAO:
                 cur.close()
                 conn.close()
 
-    def get_card(self, cardId):
-        # Código para obtener una tarjeta de la base de datos
+    def get_cardID(self, cardNumber, user: user):
+        userId_result = self.userDAO.get_userID(user)
+        if userId_result is None:
+            print("Usuario no encontrado")
+            return None
+
+        userId = userId_result[0]  # Acceder al primer elemento de la tupla devuelta por fetchone()
+
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -99,13 +112,18 @@ class CardDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                SELECT * FROM cards WHERE cardId = %s
-                """, (cardId,))
-
-            card = cur.fetchone()
-            return card
+                SELECT cardId FROM card WHERE cardNumber = %s AND userId = %s
+                """, (cardNumber, userId))
+            
+            cardId_result = cur.fetchone()
+            if cardId_result:
+                return cardId_result[0]
+            else:
+                print("Tarjeta no encontrada")
+                return None
         except Exception as e:
             print(f"Error al obtener la tarjeta: {e}")
+            return None
         finally:
             if conn.is_connected():
                 cur.close()

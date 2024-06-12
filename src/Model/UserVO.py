@@ -1,3 +1,4 @@
+
 class user:
     
     def __init__():
@@ -7,7 +8,7 @@ class user:
         self.userRole = userRole
         self.name = name
         self.email = email
-        self.hashedPassword = self.hashPassword(password)
+        self.hashedPassword = password
         self.phone = phone
 
     def getUserRole(self):

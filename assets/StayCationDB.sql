@@ -1,9 +1,4 @@
-/*==============================================================*/
-/* DBMS name: DBeaver 24.0.4                                    */
-/*==============================================================*/
-
 drop database if exists staycation;
-
 create database staycation;
 
 use staycation;
@@ -14,8 +9,20 @@ create table User (
     userRole varchar(1) not null,
     name varchar(50) not null,
     email varchar(60) unique not null,
-    hashedPassword varchar (64) not null, -- utilizar un hash SHA-256
+    hashedPassword varchar(64) not null, -- utilizar un hash SHA-256
     phone varchar(20) unique not null
+);
+
+-- Card table creation
+create table Card (
+    cardId varchar(36) primary key default (replace(uuid(), '-', '')),
+    userId varchar(36) not null,
+    cardNumber varchar(28) not null,
+    cardOwner varchar(50) not null,
+    dueDate varchar(5) not null,
+    cvv varchar(5) not null, -- i.e: 07/28 
+    balance int check(balance > 0),
+    foreign key (userId) references User(userId)
 );
 
 -- Property Type table creation
@@ -57,19 +64,10 @@ create table Property (
     foreign key (propertyTypeId) references PropertyType(propertyTypeId),
     foreign key (propertyAddonId) references PropertyAddon(propertyAddonId)
 );
+ALTER TABLE booking
+ADD COLUMN ending_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
--- Card table creation
-create table Card (
-    cardId varchar(36) primary key default (replace(uuid(), '-', '')),
-    userId varchar(36) not null,
-    cardNumber varchar(28) not null,
-    cardOwner varchar(50) not null,
-    dueDate varchar(5) not null,
-    cvv varchar(5) not null, -- i.e: 07/28 
-    balance int check(balance > 0),
-    foreign key(userId) references User(userId)
-);
-
+drop table staycation.Booking
 -- Booking table creation
 create table Booking (
     bookingId varchar(36) primary key default (replace(uuid(), '-', '')),
@@ -87,7 +85,7 @@ create table Comment (
     userId varchar(36) not null,
     content varchar(500) not null,
     uploadDate timestamp default current_timestamp,
-    rating int check (rating >= 0 AND rating <= 5),
+    rating int check (rating >= 0 and rating <= 5),
     foreign key (bookingId) references Booking(bookingId),
     foreign key (userId) references User(userId)
 );

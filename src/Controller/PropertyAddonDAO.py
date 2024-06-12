@@ -1,13 +1,63 @@
 from Model.PropertyAddonVO import propertyAddon
 from Model.DBconnetion import databaseConnection
-import uuid
 
 class PropertyAddonDAO:
     def __init__(self):
         pass
-    propertyAddonVO = propertyAddon()
+    
+    def get_propertyAddons(self, propertyAddon):
+        wifi = propertyAddon.wifi
+        kitchen = propertyAddon.kitchen
+        parking = propertyAddon.parking
+        staffService = propertyAddon.staffService
+        pool = propertyAddon.pool
+        securityCameras = propertyAddon.securityCameras
+        laundry = propertyAddon.laundry
+        gym = propertyAddon.gym
 
+        wifi = True if wifi.upper() == "S" else False
+        kitchen = True if kitchen.upper() == "S" else False
+        parking = True if parking.upper() == "S" else False
+        staffService = True if staffService.upper() == "S" else False
+        pool = True if pool.upper() == "S" else False
+        securityCameras = True if securityCameras.upper() == "S" else False
+        laundry = True if laundry.upper() == "S" else False
+        gym = True if gym.upper() == "S" else False
+
+        try:
+            db = databaseConnection()
+            conn = db.getConnection()
+            if not conn:
+                raise Exception("No se pudo establecer la conexión a la base de datos.")
+            
+            cur = db.getCursor(conn)
+            cur.execute("""
+                SELECT propertyAddonId 
+                FROM propertyaddon
+                WHERE wifi = %s AND kitchen = %s AND parking = %s AND staffService = %s AND pool = %s AND securityCameras = %s AND laundry = %s AND gym = %s
+                """, (wifi, kitchen, parking, staffService, pool, securityCameras, laundry, gym))
+            
+            result = cur.fetchone()
+            if result:
+                return result[0]
+            else:
+                print("No se encontró ninguna propiedad con esas características.")
+                return None
+        except Exception as e:
+            print(f"Error al seleccionar el ID del complemento de propiedad: {e}")
+            return None
+        finally:
+            if 'cur' in locals() and cur:
+                try:
+                    if cur._have_unread_result():
+                        cur.fetchall()  # Leer todos los resultados no leídos
+                except:
+                    pass
+                cur.close()
+            if 'conn' in locals() and conn.is_connected():
+                conn.close()
     def select_propertyAddon(self, propertyAddonId):
+        
         try:
             db = databaseConnection()
             conn = db.getConnection()
@@ -16,7 +66,7 @@ class PropertyAddonDAO:
 
             cur = db.getCursor(conn)
             cur.execute("""
-                SELECT * FROM propertyAddons WHERE propertyAddonId = %s
+                SELECT * FROM propertyaddon WHERE propertyAddonId = %s
                 """, (propertyAddonId,))
 
             propertyAddon = cur.fetchone()
@@ -27,33 +77,6 @@ class PropertyAddonDAO:
             if conn.is_connected():
                 cur.close()
                 conn.close()
-
-    def get_propertyAddons(self):
-        try:
-            db = databaseConnection()
-            conn = db.getConnection()
-            if not conn:
-                raise Exception("No se pudo establecer la conexión a la base de datos.")
-            cur = db.getCursor(conn)
-            cur.execute("""
-                SELECT propertyAddonId 
-                FROM propertyaddon
-                WHERE wifi = %s AND kitchen = %s AND parking = %s AND staffService = %s AND pool = %s AND securityCameras = %s AND laundry = %s AND gym = %s
-                """, (propertyAddon.wifi, propertyAddon.kitchen, propertyAddon.parking, propertyAddon.staffService, propertyAddon.pool, propertyAddon.securityCameras, propertyAddon.laundry, propertyAddon.gym))
-            result = cur.fetchone()
-            if result:
-                return result[0]
-            else:
-                print("No se encontró ninguna propiedad con esas características.")
-        except Exception as e:
-            print(f"Error al seleccionar el ID del complemento de propiedad: {e}")
-            return None
-        finally:
-            if 'cur' in locals():
-                cur.close()
-            if 'conn' in locals():
-                conn.close()
-
 
     def setAllCombinations():
         try:

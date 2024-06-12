@@ -1,6 +1,5 @@
 
 import uuid
-
 class card:
     def __init__(self, userId, cardNumber, cardOwner, dueDate, cvv, balance, cardId=None):
         self.userId = userId
