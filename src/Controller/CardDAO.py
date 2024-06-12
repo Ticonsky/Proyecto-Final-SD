@@ -17,14 +17,25 @@ class CardDAO:
         if userId_result is None:
             print("Usuario no encontrado")
             return
-
         userId = userId_result[0]  # Acceder al primer elemento de la tupla devuelta por fetchone()
+
+
+    def __init__(self):
+        pass
+
+    def create_card(self, card):
+        userVO = user()
+        userdao=UserDAO()
+        userId = userdao.get_userId(userVO) 
+
         cardNumber = card.cardNumber
         cardOwner = card.cardOwner
         dueDate = card.dueDate
         cvv = card.cvv
         balance = card.balance
         cardId = str(uuid.uuid4())
+        print(cardOwner)
+
 
         try:
             db = databaseConnection()
@@ -32,6 +43,7 @@ class CardDAO:
             if not conn:
                 raise Exception("No se pudo establecer la conexión a la base de datos")
             cur = db.getCursor(conn)
+            print(userId)
             cur.execute("""
                 INSERT INTO card (cardId, userId, cardNumber, cardOwner, dueDate, cvv, balance)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
